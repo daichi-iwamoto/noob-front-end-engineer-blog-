@@ -1,31 +1,40 @@
 import Link from "next/link";
+import { Header } from "@/components/Header";
 import { getPosts } from "@/libs/mdxDataFetcher";
+import styles from "./page.module.css";
 
-export default function Page() {
+export default function Home() {
   const contents = getPosts();
 
   return (
-    <main>
-      <div>
+    <main className={styles.main}>
+      <Header page="index" />
+      <div className={styles.postList}>
         {contents.map(
           (
             { title, tags, publishDate, updatedDate, description, slug },
             index,
           ) => (
-            <Link key={index} href={`/posts/${slug}`}>
-              <header>
-                <h3>{title}</h3>
-                <div>
-                  <small>公開日: {publishDate}</small>
-                  <small>更新日: {updatedDate}</small>
+            <Link key={index} href={`/posts/${slug}`} className={styles.post}>
+              <header className={styles.header}>
+                <h3 className={styles.title}>{title}</h3>
+                <div className={styles.date}>
+                  <small className={styles.publishDate}>
+                    公開日: {publishDate}
+                  </small>
+                  <small className={styles.updatedDate}>
+                    更新日: {updatedDate}
+                  </small>
                 </div>
               </header>
-              <div>
+              <div className={styles.tags}>
                 {tags.map((tag, index) => (
-                  <p key={index}>{tag}</p>
+                  <p key={index} className={styles.tag}>
+                    {tag}
+                  </p>
                 ))}
               </div>
-              <p>{description}</p>
+              <p className={styles.description}>{description}</p>
             </Link>
           ),
         )}
