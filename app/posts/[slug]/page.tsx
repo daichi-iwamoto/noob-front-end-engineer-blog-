@@ -1,8 +1,10 @@
 import fs from "fs";
 import path from "path";
-import { Header } from "@/components/Header";
+import { Source_Code_Pro } from "next/font/google";
 import styles from "./page.module.css";
 import { getPostDitails, getPostContent } from "@/libs/mdxDataFetcher";
+
+const sourceCodePro = Source_Code_Pro({ subsets: ["latin"] });
 
 // ビルド時に静的なパスを生成する
 export function generateStaticParams() {
@@ -23,10 +25,9 @@ export default async function Home({ params: { slug } }: Props) {
   const { value } = await getPostContent(slug);
 
   return (
-    <main className={styles.post}>
-      <Header page="index" />
+    <div className={`${styles.post} ${sourceCodePro.className}`}>
       <div className={styles.contentHeader}>
-        <div className={styles.title}>{title}</div>
+        <h1 className={styles.title}>{title}</h1>
         <div className={styles.tags}>
           {tags.map((tag, index) => (
             <p key={index} className={styles.tag}>
@@ -34,12 +35,15 @@ export default async function Home({ params: { slug } }: Props) {
             </p>
           ))}
         </div>
-        <small className={styles.publishDate}>公開日: {publishDate}</small>
-        <small className={styles.updatedDate}>更新日: {updatedDate}</small>
+        <div className={styles.dates}>
+          <div className={styles.publishDate}>公開日: {publishDate}</div>
+          <div className={styles.updatedDate}>更新日: {updatedDate}</div>
+        </div>
       </div>
-      <div className={styles.content}>
-        <div dangerouslySetInnerHTML={{ __html: String(value) }} />
-      </div>
-    </main>
+      <div
+        className={styles.content}
+        dangerouslySetInnerHTML={{ __html: value }}
+      />
+    </div>
   );
 }

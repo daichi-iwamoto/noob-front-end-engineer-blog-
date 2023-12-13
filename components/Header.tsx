@@ -1,12 +1,12 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import Link from "next/link";
-import React from "react";
 import styles from "@/app/global.module.css";
 
-type HeaderProps = {
-  page: "index" | "contact";
-};
+export const Header = () => {
+  const pathName = usePathname();
 
-export const Header = ({ page }: HeaderProps) => {
   return (
     <header className={styles.globalHeader}>
       <Link href="/">
@@ -16,17 +16,21 @@ export const Header = ({ page }: HeaderProps) => {
       <div className={styles.links}>
         <Link
           className={
-            page === "index" ? `${styles.active} ${styles.link}` : styles.link
+            pathName === "/" || pathName === "/posts"
+              ? `${styles.active} ${styles.link}`
+              : styles.link
           }
           href="/"
         >
-          blog
+          posts
         </Link>
         <Link
           className={
-            page === "contact" ? `${styles.active} ${styles.link}` : styles.link
+            pathName === "/contact"
+              ? `${styles.active} ${styles.link}`
+              : styles.link
           }
-          href="/contact/"
+          href="/contact"
         >
           contact
         </Link>

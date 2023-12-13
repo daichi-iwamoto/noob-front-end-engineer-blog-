@@ -2,10 +2,12 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { unified } from "unified";
-import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
-import rehypeSanitize from "rehype-sanitize";
 import rehypeStringify from "rehype-stringify";
+import remarkParse from "remark-parse";
+import remarkGfm from "remark-gfm";
+import rehypeSanitize from "rehype-sanitize";
+import rehypePrettyCode from "rehype-pretty-code";
 
 type Post = {
   title: string;
@@ -76,15 +78,19 @@ export function getPostDitails(fileName: string): Post {
 }
 
 // 記事コンテンツ取得
-export function getPostContent(fileName: string) {
+export async function getPostContent(fileName: string) {
   const filePath = path.join(process.cwd(), `contents/${fileName}.mdx`);
   const file = fs.readFileSync(filePath, "utf8");
   const { content } = matter(file);
 
-  return unified()
-    .use(remarkParse)
-    .use(remarkRehype)
-    .use(rehypeSanitize)
-    .use(rehypeStringify)
+  return await unified()
+    .use(remarkParse) // Convert into markdown AST
+    .use(remarkGfm) // Support GFM (tables, autolinks, tasklists, strikethrough).
+    .use(remarkRehype) // Transform to HTML AST
+    .use(rehypeSanitize) // Sanitize HTML input
+    .use(rehypePrettyCode, {
+      theme: "material-theme-darker",
+    })
+    .use(rehypeStringify) // Convert AST into serialized HTML
     .process(String(content));
 }
