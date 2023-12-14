@@ -5,6 +5,7 @@ import { unified } from "unified";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import remarkParse from "remark-parse";
+import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 import rehypeSanitize from "rehype-sanitize";
 import rehypePrettyCode from "rehype-pretty-code";
@@ -101,6 +102,7 @@ export async function getContent({ type, fileName }: GetContentProps) {
 
   return await unified()
     .use(remarkParse) // Convert into markdown AST
+    .use(remarkBreaks) // Support soft-breaks
     .use(remarkGfm) // Support GFM (tables, autolinks, tasklists, strikethrough).
     .use(remarkRehype) // Transform to HTML AST
     .use(rehypeSanitize) // Sanitize HTML input
