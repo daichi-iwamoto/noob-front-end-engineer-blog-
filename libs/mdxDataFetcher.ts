@@ -9,7 +9,7 @@ import remarkGfm from "remark-gfm";
 import rehypeSanitize from "rehype-sanitize";
 import rehypePrettyCode from "rehype-pretty-code";
 
-type Post = {
+type FrontMatter = {
   title: string;
   tags: string[];
   publishDate: string;
@@ -18,9 +18,15 @@ type Post = {
   slug: string;
 };
 
+type contentTypes = "posts" | "tips";
+
+type GetFrontMatterProps = {
+  type: contentTypes;
+};
+
 // 一覧取得
-export function getPosts(): Post[] {
-  const postsDirectory = path.join(process.cwd(), "contents");
+export function getFrontMatter({ type }: GetFrontMatterProps): FrontMatter[] {
+  const postsDirectory = path.join(process.cwd(), `contents/${type}`);
   const fileNames = fs.readdirSync(postsDirectory, { withFileTypes: true });
 
   const posts = fileNames.map(({ name }) => {
@@ -49,10 +55,15 @@ export function getPosts(): Post[] {
   return posts;
 }
 
-// 記事詳細取得
-export function getPostDitails(fileName: string): Post {
+export type GetDetailsProps = {
+  type: contentTypes;
+  fileName: string;
+};
+
+// 詳細取得
+export function getDitails({ type, fileName }: GetDetailsProps): FrontMatter {
   const file = fs.readFileSync(
-    path.join(process.cwd(), `contents/${fileName}.mdx`),
+    path.join(process.cwd(), `contents/${type}/${fileName}.mdx`),
     "utf8",
   );
 
@@ -77,9 +88,14 @@ export function getPostDitails(fileName: string): Post {
   };
 }
 
-// 記事コンテンツ取得
-export async function getPostContent(fileName: string) {
-  const filePath = path.join(process.cwd(), `contents/${fileName}.mdx`);
+export type GetContentProps = {
+  type: contentTypes;
+  fileName: string;
+};
+
+// コンテンツ取得
+export async function getContent({ type, fileName }: GetContentProps) {
+  const filePath = path.join(process.cwd(), `contents/${type}/${fileName}.mdx`);
   const file = fs.readFileSync(filePath, "utf8");
   const { content } = matter(file);
 
