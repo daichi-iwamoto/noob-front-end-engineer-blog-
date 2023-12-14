@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
-import { Courier_Prime } from "next/font/google";
+import { Zen_Kaku_Gothic_New } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 
-const courierPrime = Courier_Prime({ weight: "400", subsets: ["latin"] });
+const ZenKakuGothicNew = Zen_Kaku_Gothic_New({
+  subsets: ["latin"],
+  weight: "400",
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -17,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
-      <body className={courierPrime.className}>
+      <body className={ZenKakuGothicNew.className}>
         <Header />
         {children}
       </body>

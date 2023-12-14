@@ -11,7 +11,7 @@
     width: 100%;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 1rem;
 
     .tags {
       display: flex;
@@ -20,7 +20,8 @@
       gap: 0.5rem;
 
       .tag {
-        padding: 0.3rem 0.5rem;
+        padding: 0.1rem 0.3rem;
+        color: var(--white);
         background: var(--pink);
         font-size: 0.8rem;
       }
@@ -46,8 +47,14 @@
     border-top: solid 1px var(--light-gray);
   }
 
+  .content ul {
+    margin: 0.5rem 0 0 1.5rem;
+    list-style: disc;
+  }
+
   .content p {
     margin-top: 1rem;
+    font-size: 0.9rem;
   }
 
   .content a {
@@ -59,10 +66,10 @@
     color: var(--light-purple);
   }
 
-  .content p code {
+  .content p code,
+  .content ul li code {
+    font-size: 0.9rem;
     color: var(--orange);
-    margin: 0 3px;
-    font-size: 1rem;
   }
 
   .content table {
@@ -106,8 +113,9 @@
   }
 
   .content h2 {
+    font-size: 1.2rem;
     padding: 0.5rem 0.8rem;
-    margin: 3rem 0 0.6rem;
+    margin: 3rem 0 1rem;
     background-color: var(--white);
     box-shadow:
       1px 1px 5px #dadada,
@@ -115,14 +123,14 @@
   }
 
   .content h3 {
+    font-size: 1.2rem;
     padding-bottom: 0.5rem;
     border-bottom: solid 0.5px;
     margin: 3rem 0 0.6rem;
-    font-size: 1.4rem;
   }
 
   .content h4 {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: bold;
     margin: 3rem 0 0.6rem;
   }
@@ -132,6 +140,11 @@
   }
 
   .content ul li {
+    font-size: 0.9rem;
     margin-bottom: 0.5rem;
+  }
+
+  .content ul li p {
+    margin: 0;
   }
 }

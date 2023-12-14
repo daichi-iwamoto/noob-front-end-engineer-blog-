@@ -1,0 +1,74 @@
+---
+title: "ブログサイトをGatsbyからNextに移行しました"
+tags:
+  - Gatsby
+  - Next
+  - React
+  - TypeScript
+  - Vercel
+publishDate: "2023-12-14"
+updatedDate: "2023-12-14"
+description: "Gatsby Cloudがサービス停止したのを機に、ブログサイトをGatsbyからNextに移行し、デプロイ先もVercelに移行しました。"
+---
+
+`Gatsby Cloud`のサービス停止を機に、本ブログサイトを下記のように移行しました。
+
+|                | before       | after  |
+| -------------- | ------------ | ------ |
+| フレームワーク | Gatsby       | Next   |
+| デプロイ先     | Gatsby Cloud | Vercel |
+
+移行にあたって行った作業や、調査した内容などを軽いメモ代わりに残しておきます。
+
+## ブログ機能の実装
+
+- MDX対応
+- frontmatter対応
+- コードブロックのシンタックスハイライト対応
+- MDX内のテーブル記法に対応
+
+### TODO
+
+- MDX内の改行毎に `<br />` タグを挿入するようにする
+- 上記みたいな軽い内容を投稿できる `Tips` ページを作成する
+- TOCの実装
+- データ構造化対応
+- 記事検索 or 絞り込み機能の実装
+- 記事ソート機能の実装
+
+### 所感
+
+- `unified` , `remark` , `rehype` 周りのライブラリがややこしくて覚えられない
+- 直近でMDXを扱う際に使用するライブラリは Astro の [starlight](https://starlight.astro.build/) を参考にするのが良さそう
+- 次リメイクする際はもしかしたら素直に Astro とかの方がいいかも
+  - [SSGform](https://ssgform.com/) とかも使い心地気になる
+
+#### 参考
+
+- [[Next.js公式] Markdown and MDX](https://nextjs.org/docs/app/building-your-application/configuring/mdx#deep-dive-how-do-you-transform-markdown-into-html)
+- [[Next.js公式] Render Markdown](https://nextjs.org/learn-pages-router/basics/dynamic-routes/render-markdown)
+
+## お問い合わせフォームの実装
+
+使用した技術周り
+
+- Gmail API
+- nodemailer
+- Google reCAPTCHA v3
+- react-hot-toast
+- react-hook-form
+
+### TODO
+
+- バリデーションの実装
+- 多重送信防止の実装
+
+### 所感
+
+- `nodemailer`でのメール送信機能の実装、OAuth2認証がハック気味な手法で実装したのですぐ忘れそう
+- reCAPTCHA Enterprise と V3 の管理画面間違いがち（ややこしい）
+
+#### 参考
+
+- [[Github] node.js 上の nodemailer で OAuth 2.0 を使って gmail からメールを送る](https://gist.github.com/neguse11/bc09d86e7acbd6442cd4)
+- [[Zenn] Next.jsのWEBサイトにreCAPTCHA(v3)を導入する](https://zenn.dev/angelecho/articles/daeb265bb3bf4b)

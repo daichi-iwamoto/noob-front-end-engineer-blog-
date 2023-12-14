@@ -1,10 +1,7 @@
 import fs from "fs";
 import path from "path";
-import { Source_Code_Pro } from "next/font/google";
 import styles from "./page.module.css";
 import { getPostDitails, getPostContent } from "@/libs/mdxDataFetcher";
-
-const sourceCodePro = Source_Code_Pro({ subsets: ["latin"] });
 
 // ビルド時に静的なパスを生成する
 export function generateStaticParams() {
@@ -25,7 +22,7 @@ export default async function Home({ params: { slug } }: Props) {
   const { value } = await getPostContent(slug);
 
   return (
-    <div className={`${styles.post} ${sourceCodePro.className}`}>
+    <div className={styles.post}>
       <div className={styles.contentHeader}>
         <h1 className={styles.title}>{title}</h1>
         <div className={styles.tags}>
