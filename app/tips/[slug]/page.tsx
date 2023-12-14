@@ -5,7 +5,7 @@ import { getDitails, getContent } from "@/libs/mdxDataFetcher";
 
 // ビルド時に静的なパスを生成する
 export function generateStaticParams() {
-  const postsDirectory = path.join(process.cwd(), "contents/posts");
+  const postsDirectory = path.join(process.cwd(), "contents/tips");
   const fileNames = fs.readdirSync(postsDirectory, { withFileTypes: true });
 
   return fileNames.map(({ name }) => ({ slug: name.split(".").at(-2) }));
@@ -19,10 +19,10 @@ type Props = {
 
 export default async function Home({ params: { slug } }: Props) {
   const { title, tags, publishDate, updatedDate } = getDitails({
-    type: "posts",
+    type: "tips",
     fileName: slug,
   });
-  const { value } = await getContent({ type: "posts", fileName: slug });
+  const { value } = await getContent({ type: "tips", fileName: slug });
 
   return (
     <div className={styles.post}>

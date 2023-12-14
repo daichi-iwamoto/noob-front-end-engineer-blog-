@@ -20,9 +20,19 @@ export const Header = () => {
               ? `${styles.active} ${styles.link}`
               : styles.link
           }
-          href="/"
+          href="/posts"
         >
           posts
+        </Link>
+        <Link
+          className={
+            pathName === "/tips"
+              ? `${styles.active} ${styles.link}`
+              : styles.link
+          }
+          href="/tips"
+        >
+          tips
         </Link>
         <Link
           className={

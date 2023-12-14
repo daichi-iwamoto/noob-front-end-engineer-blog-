@@ -10,6 +10,7 @@ export default function Home() {
     <>
       <SideDecoration />
       <div className={styles.main}>
+        <h1>Posts</h1>
         <div className={styles.postList}>
           {contents.map(
             (
