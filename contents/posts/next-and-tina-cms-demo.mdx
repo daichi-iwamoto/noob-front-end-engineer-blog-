@@ -1,0 +1,348 @@
+---
+title: "React（Next.js）へのTina CMS導入手順"
+tags:
+  - React
+  - Next.js
+  - Tina CMS
+publishDate: "2023-12-28"
+updatedDate: "2023-12-28"
+description: "Next.js に Headless CM Sの一つである Tina CMS を導入する手順を解説してます。デモでは Tina CMS の Visual Editing 機能を使ってドキュメント一覧画面の編集ができるまで行なってます。"
+---
+
+本記事では下記の様な内容を実装していきます。
+
+- Next.js の `App Router` でTina CMSを使用してドキュメントサイトを作成する
+- Tina CMS の `Visual Editing` ができるようにする
+- 今回のデモでは記事詳細画面は作成せず、一覧画面のみ作成していきます。
+
+また、各モジュールのバージョンは下記の通りです。
+
+- next: `14.0.4`
+- tinacms: `1.5.28`
+
+## Tina CMSとは？
+
+Tina CMS は最近流行りの Headless CMS の一つで
+公式がアピールしているポイントとして以下のような特徴があります。
+
+- Gitベースのコンテンツ管理
+  - コンテンツをマークダウンや MDX, JSONなどのファイルとしてGitで管理
+- Headless CMSとして珍しいリアルタイムのビジュアル編集機能
+  - 2023/12/27現在は React のみ対応
+- OSSである事やセルフホストが可能である事などから、ベンダーロックインのリスクが低い
+  - Tina Cloud と言うサービスを提供しているが、セルフホストも可能
+- 独自のクエリ機能によるスケーラビリティ
+  - 内部的にはGraphQLを使用してコンテンツ取得をしている
+
+この中でも最も大きな特徴としては、 Gitベースのコンテンツ管理を行っているという点です。
+
+通常の Headless CMS では、コンテンツの管理を行うために
+CMS側でコンテンツを管理し、API経由でコンテンツを取得するという形になりますが、
+Tina CMS では コンテンツをマークダウンや MDX, JSONなどのファイルとしてGitで管理します。
+
+その為、APIのリクエスト制限による有料プランのアップグレードなどが必要無い。
+コンテンツのバージョン管理が容易になるといったメリットがあります。
+
+## 各種セットアップ
+
+### Next.jsのセットアップ
+
+まずは Next.js のプロジェクトを作成しましょう。
+今回は下記の様な設定で作成しました。
+
+```zsh title="zsh"
+# Next.jsのプロジェクトを作成
+npx create-next-app@latest
+
+# 各種設定
+What is your project named? ... next-and-tina-cms-demo
+Would you like to use TypeScript? ... Yes
+Would you like to use ESLint? ... Yes
+Would you like to use Tailwind CSS? ... No
+Would you like to use 'src/' directory? ... No
+Would you like to use App Router? (recommended) ... Yes
+Would you like to customize the default import alias (@/*)? ... No
+```
+
+### Tina CMSのセットアップ
+
+セットアップはコマンド1つで完了します。
+その際に、使用しているフレームワーク等を聞かれるので選択を行なってください。
+
+```zsh title="zsh"
+# 作成したプロジェクトに移動
+cd [作成したプロジェクト名]
+
+# Tina CMS セットアップ
+npx @tinacms/cli@latest init
+What framework are you using? > Next.js
+Choose your package manager > NPM
+Would you like to use Typescript for your Tina Configuration (Recommended)? ... yes
+```
+
+このセットアップのタイミングで色々不要なものが生成されるので、
+[こちら](https://github.com/daichi-iwamoto/next-and-tina-cms-demo/commit/1ccba9acf26d014ba7e8385088798f109f1992ff)のコミットログを参考に削除してOKです。
+サンプルで生成されるコンテンツと、そのコンテンツの Visual Editing 用のページを削除しています。
+
+## コンテンツのモデルを作成
+
+まずは、Tina CMS で管理するコンテンツのモデルを作成していきましょう。
+
+Tina CMS では、コンテンツのモデルを `/tina/config.ts` で定義します。
+セットアップの際に生成されているサンプルのモデルは削除して、下記のように修正していきます。
+
+```ts title="/tina/config.ts"
+schema: {
+    collections: [
+      {
+        name: "docs",
+        label: "Docs",
+        path: "content/docs",     // 出力されるファイルのパス
+        fields: [
+          {
+            type: "string",
+            name: "title",
+            label: "Title",
+            isTitle: true,        // タイトルをファイル名に適用
+            required: true,
+          },
+          {
+            type: "string",
+            name: "tags",
+            label: "Tags",
+            list: true,           // 複数のタグを設定できるようにする
+          },
+          {
+            type: "rich-text",
+            name: "body",
+            label: "Body",
+            isBody: true,         // マークダウン（もしくはMDX）の body に適用
+          },
+        ],
+      },
+    ],
+  },
+```
+
+今回のデモではドキュメントサイトを作成するので、`title` , `tags` , `body` の3つのフィールドを定義しています。
+使用できるフィールドタイプの種類は他にもありますので、公式ドキュメントを参考にしてください。
+
+この状態で `npm run dev` を実行し、 http://localhost:3000/admin/index.html にアクセスすると
+下記の様なコンテンツの編集画面が表示されます。
+
+![test](/contents/next-and-tina-cms-demo/admin-page01.gif)
+
+とても簡単に管理画面を生成してくれてありがたいですね。
+
+適当な値を入力して保存すると、先ほど `/tina/config.ts` で定義した
+`/content/docs` にファイルが生成されている事が確認できると思います。
+
+## Tina CMS の Visual Editing で使用するコンポーネントを作成する
+
+コンテンツの作成はできたので、続いては作成したコンテンツを表示するコンポーネントを作成していきます。
+
+React であれば `useTina` と言う hooks が提供されているので、
+こちらを使用する事で簡単にコンテンツを取得する事ができます。
+
+useTina を使わずとも既存のマークダウンファイル操作のライブラリを使用する事ももちろん可能ですが、
+useTina を使用する事で自動的に `Visual Editing` が可能になります。
+
+新規サイトなどで使用する際は、最初から useTina を使用する事をオススメします。
+
+### 一覧画面の作成
+
+#### スタイリング
+
+まずはテストデータの一覧を表示するコンポーネントを作成していきます。
+今回はトップページで一覧表示をしていこうと思います。
+
+スタイルシートはよしなに修正していただいてOKです。
+一応、今回のデモで使用した css を記載しておきます。
+
+```css title="/app/page.module.css"
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 6rem;
+  gap: 2rem;
+  min-height: 100vh;
+}
+
+.main ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.main ul li {
+  width: 100%;
+}
+```
+
+#### ページコンポーネントの作成
+
+続いてはページコンポーネントを作成していきます。
+このコンポーネントで Tina CMS が自動生成してくれる query を使用します。
+
+```tsx title="/app/page.tsx"
+import client from "@/tina/__generated__/client";
+import styles from "./page.module.css";
+
+// ドキュメント一覧を取得する関数
+async function getDocs() {
+  const response = await client.queries.docsConnection();
+
+  return {
+    data: response.data,
+    query: response.query,
+    variables: response.variables,
+  };
+}
+
+export default async function Home() {
+  const docs = await getDocs();
+
+  return (
+    <main className={styles.main}>
+      <h1>Docs</h1>
+    </main>
+  );
+}
+```
+
+`@/tina/__generated__/client` から client を import してきて、
+`docsConnection` と言うクエリを実行しています。
+
+このクエリで取得してきたデータを
+`useTina` に渡すことでデータの取得と Visual Editing が可能になります。
+
+このクエリは `/tina/config.ts` の `collections` を定義し
+npm run dev を実行した際に生成されています。
+
+試しに `/tina/__generated__/queries.gql` を見てみてください。
+
+自動的に単一のドキュメントを取得する `docs` クエリと、
+全てのドキュメントを取得する `docsConnection` クエリが生成されている事が確認できると思います。
+
+#### 一覧表示（Visual Editing 対応）用のコンポーネント
+
+続いては先ほど取得したデータを元に一覧表示を行うコンポーネントを作成していきます。
+
+```tsx title="/components/docs.tsx"
+"use client";
+import { useTina } from "tinacms/dist/react";
+import {
+  DocsConnectionQuery,
+  DocsConnectionQueryVariables,
+} from "@/tina/__generated__/types";
+
+type DocsProps = {
+  docs: {
+    data: DocsConnectionQuery;
+    query: string;
+    variables: DocsConnectionQueryVariables;
+  };
+};
+
+export function Docs({ docs }: DocsProps) {
+  const { data } = useTina({
+    // useTina を使用してデータを取得
+    query: docs.query,
+    variables: docs.variables,
+    data: docs.data,
+  });
+
+  return (
+    <ul>
+      {data?.docsConnection.edges?.map((doc) => {
+        if (!doc?.node) return;
+
+        const {
+          node: { id, title, tags },
+        } = doc;
+
+        return (
+          <li key={id}>
+            <p>{title}</p>
+            <p>{tags?.join(", ")}</p>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+```
+
+`useTina` に先ほどページコンポーネントで取得してきたデータを渡し、
+`data` から必要なデータを取得して表示しています。
+
+あとはこのコンポーネントをページコンポーネント側から呼び出してあげればOKです。
+
+```diff title="/app/page.tsx"
+  return (
+    <main className={styles.main}>
+      <h1>Docs</h1>
++     <Docs docs={docs} />
+    </main>
+  );
+```
+
+#### tina cms 側に使用するコンポーネントを指定する
+
+コンポーネントの作成はできたので、あとは Tina CMS 側に使用するコンポーネントを指定してあげれば完了です。
+
+```diff title="/tina/config.ts"
+collections: [
+      {
+        name: "docs",
+        label: "Docs",
+        path: "content/docs", // 出力されるファイルのパス
+        fields: [
+          {
+            type: "string",
+            name: "title",
+            label: "Title",
+            isTitle: true, // タイトルをファイル名に適用
+            required: true,
+          },
+          {
+            type: "string",
+            name: "tags",
+            label: "Tags",
+            list: true, // 複数のタグを設定できるようにする
+          },
+          {
+            type: "rich-text",
+            name: "body",
+            label: "Body",
+            isBody: true, // マークダウン（もしくはMDX）の body に適用
+          },
+        ],
++        ui: {
++          router: () => "/",
++        },
+      },
+    ],
+```
+
+### Visual Editing の確認
+
+これで Visual Editing ができるようになりました。
+npm ren dev を実行し、 http://localhost:3000/admin/index.html にアクセスしてみましょう。
+
+![visual editing](/contents/next-and-tina-cms-demo/visual-editing.gif)
+
+編集した内容がリアルタイムに反映される様になりましたね！
+サイドメニューのホームアイコンを謳歌することでコンテンツ一覧が表示されるので、
+そこからコンテンツ毎の編集へ移動する事ができます。
+
+### おまけ
+
+`TinaMarkdown` と言うコンポーネントを使用する事で
+md, mdx のコンテンツを簡単に描画する事ができます。
+
+[こちら](https://tina.io/docs/editing/markdown/#rendering-content-with-object-object) の公式ドキュメントを参考にしていただければ
+今回のデモで定義した `body` フィールドを簡単に描画する事ができます。

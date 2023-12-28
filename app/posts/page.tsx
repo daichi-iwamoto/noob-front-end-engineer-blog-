@@ -5,6 +5,10 @@ import styles from "./page.module.css";
 
 export default function Home() {
   const contents = getFrontMatter({ type: "posts" });
+  const sortedContents = contents.sort(
+    (x, y) =>
+      new Date(y.publishDate).getTime() - new Date(x.publishDate).getTime(),
+  );
 
   return (
     <>

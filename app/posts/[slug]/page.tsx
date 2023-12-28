@@ -3,6 +3,25 @@ import path from "path";
 import styles from "./page.module.css";
 import { getDitails, getContent } from "@/libs/mdxDataFetcher";
 
+type Props = {
+  params: {
+    slug: string;
+  };
+};
+
+// ビルド事にメタデータを設定する
+export async function generateMetadata({ params: { slug } }: Props) {
+  const { title, description, tags, publishDate, updatedDate } = getDitails({
+    type: "posts",
+    fileName: slug,
+  });
+
+  return {
+    title,
+    description,
+  };
+}
+
 // ビルド時に静的なパスを生成する
 export function generateStaticParams() {
   const postsDirectory = path.join(process.cwd(), "contents/posts");
@@ -11,17 +30,12 @@ export function generateStaticParams() {
   return fileNames.map(({ name }) => ({ slug: name.split(".").at(-2) }));
 }
 
-type Props = {
-  params: {
-    slug: string;
-  };
-};
-
 export default async function Home({ params: { slug } }: Props) {
   const { title, tags, publishDate, updatedDate } = getDitails({
     type: "posts",
     fileName: slug,
   });
+
   const { value } = await getContent({ type: "posts", fileName: slug });
 
   return (
