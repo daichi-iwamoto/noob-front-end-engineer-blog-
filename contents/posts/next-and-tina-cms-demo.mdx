@@ -6,14 +6,15 @@ tags:
   - Tina CMS
 publishDate: "2023-12-28"
 updatedDate: "2023-12-28"
-description: "Next.js に Headless CM Sの一つである Tina CMS を導入する手順を解説してます。デモでは Tina CMS の Visual Editing 機能を使ってドキュメント一覧画面の編集ができるまで行なってます。"
+description: "Next.js に Headless CMS の一つである Tina CMS を導入する手順を解説してます。デモでは Tina CMS の Visual Editing 機能を使ってドキュメント一覧画面の編集ができるまで行なってます。"
 ---
 
 本記事では下記の様な内容を実装していきます。
 
 - Next.js の `App Router` でTina CMSを使用してドキュメントサイトを作成する
 - Tina CMS の `Visual Editing` ができるようにする
-- 今回のデモでは記事詳細画面は作成せず、一覧画面のみ作成していきます。
+
+今回のデモでは記事詳細画面は作成せず、一覧画面のみ作成していきます。
 
 また、各モジュールのバージョンは下記の通りです。
 
@@ -30,7 +31,7 @@ Tina CMS は最近流行りの Headless CMS の一つで
 - Headless CMSとして珍しいリアルタイムのビジュアル編集機能
   - 2023/12/27現在は React のみ対応
 - OSSである事やセルフホストが可能である事などから、ベンダーロックインのリスクが低い
-  - Tina Cloud と言うサービスを提供しているが、セルフホストも可能
+  - Tina Cloud というサービスを提供しているが、セルフホストも可能
 - 独自のクエリ機能によるスケーラビリティ
   - 内部的にはGraphQLを使用してコンテンツ取得をしている
 
@@ -124,7 +125,7 @@ schema: {
   },
 ```
 
-今回のデモではドキュメントサイトを作成するので、`title` , `tags` , `body` の3つのフィールドを定義しています。
+今回のデモでは `title` , `tags` , `body` の3つのフィールドを定義しています。
 使用できるフィールドタイプの種類は他にもありますので、公式ドキュメントを参考にしてください。
 
 この状態で `npm run dev` を実行し、 http://localhost:3000/admin/index.html にアクセスすると
@@ -141,7 +142,7 @@ schema: {
 
 コンテンツの作成はできたので、続いては作成したコンテンツを表示するコンポーネントを作成していきます。
 
-React であれば `useTina` と言う hooks が提供されているので、
+React であれば `useTina` という hooks が提供されているので、
 こちらを使用する事で簡単にコンテンツを取得する事ができます。
 
 useTina を使わずとも既存のマークダウンファイル操作のライブラリを使用する事ももちろん可能ですが、
@@ -214,7 +215,7 @@ export default async function Home() {
 ```
 
 `@/tina/__generated__/client` から client を import してきて、
-`docsConnection` と言うクエリを実行しています。
+`docsConnection` というクエリを実行しています。
 
 このクエリで取得してきたデータを
 `useTina` に渡すことでデータの取得と Visual Editing が可能になります。
@@ -336,12 +337,12 @@ npm ren dev を実行し、 http://localhost:3000/admin/index.html にアクセ�
 ![visual editing](/contents/next-and-tina-cms-demo/visual-editing.gif)
 
 編集した内容がリアルタイムに反映される様になりましたね！
-サイドメニューのホームアイコンを謳歌することでコンテンツ一覧が表示されるので、
+サイドメニューのホームアイコンを押下することでコンテンツ一覧が表示されるので、
 そこからコンテンツ毎の編集へ移動する事ができます。
 
-### おまけ
+## おまけ
 
-`TinaMarkdown` と言うコンポーネントを使用する事で
+`TinaMarkdown` というコンポーネントを使用する事で
 md, mdx のコンテンツを簡単に描画する事ができます。
 
 [こちら](https://tina.io/docs/editing/markdown/#rendering-content-with-object-object) の公式ドキュメントを参考にしていただければ
