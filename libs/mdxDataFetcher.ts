@@ -9,6 +9,8 @@ import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 import rehypeSanitize from "rehype-sanitize";
 import rehypePrettyCode from "rehype-pretty-code";
+import rehypeSlug from "rehype-slug";
+import rehypeToc from "rehype-toc";
 
 type FrontMatter = {
   title: string;
@@ -100,15 +102,35 @@ export async function getContent({ type, fileName }: GetContentProps) {
   const file = fs.readFileSync(filePath, "utf8");
   const { content } = matter(file);
 
-  return await unified()
-    .use(remarkParse) // Convert into markdown AST
-    .use(remarkBreaks) // Support soft-breaks
-    .use(remarkGfm) // Support GFM (tables, autolinks, tasklists, strikethrough).
-    .use(remarkRehype) // Transform to HTML AST
-    .use(rehypeSanitize) // Sanitize HTML input
-    .use(rehypePrettyCode, {
-      theme: "material-theme-darker",
-    })
-    .use(rehypeStringify) // Convert AST into serialized HTML
-    .process(String(content));
+  // tipsでは目次を表示しない
+  return type === "tips"
+    ? await unified()
+        .use(remarkParse) // Convert into markdown AST
+        .use(remarkBreaks) // Support soft-breaks
+        .use(remarkGfm) // Support GFM (tables, autolinks, tasklists, strikethrough).
+        .use(remarkRehype) // Transform to HTML AST
+        .use(rehypeSanitize) // Sanitize HTML input
+        .use(rehypePrettyCode, {
+          theme: "material-theme-darker",
+        })
+        .use(rehypeStringify) // Convert AST into serialized HTML
+        .process(String(content))
+    : await unified()
+        .use(remarkParse) // Convert into markdown AST
+        .use(remarkBreaks) // Support soft-breaks
+        .use(remarkGfm) // Support GFM (tables, autolinks, tasklists, strikethrough).
+        .use(remarkRehype) // Transform to HTML AST
+        .use(rehypeSanitize) // Sanitize HTML input
+        .use(rehypeSlug) // Add slug to headings
+        .use(rehypeToc, {
+          nav: true,
+          cssClasses: {
+            toc: "toc",
+          },
+        }) // Add table of contents
+        .use(rehypePrettyCode, {
+          theme: "material-theme-darker",
+        })
+        .use(rehypeStringify) // Convert AST into serialized HTML
+        .process(String(content));
 }

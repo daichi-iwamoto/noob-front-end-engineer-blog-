@@ -47,6 +47,55 @@
     border-top: solid 1px var(--light-gray);
   }
 
+  .content nav {
+    border: solid 0.5px;
+    border-top: none;
+    margin-bottom: 3rem;
+  }
+
+  .content nav ol {
+    margin: 0;
+    padding: 0;
+  }
+
+  .content nav li {
+    list-style: none;
+    border-top: solid 0.5px;
+  }
+
+  .content nav li a {
+    position: relative;
+    display: block;
+    padding: 5px 10px 5px 25px;
+    text-decoration: none;
+    color: var(--black);
+    background: #fff5f7;
+    font-size: 0.6em;
+    transition: 0.2s;
+  }
+
+  .content nav li a:hover {
+    text-decoration: underline;
+    color: var(--black);
+    background: #e2ddde;
+  }
+
+  .content nav li a:hover::before {
+    content: ">";
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    font-size: 0.7rem;
+    line-height: 1;
+    animation-name: tocLink;
+    animation-duration: 0.5s;
+    animation-iteration-count: infinite;
+  }
+
+  .content nav li ol li a {
+    padding-left: 3rem;
+  }
+
   .content ul {
     margin: 0.5rem 0 0 1.5rem;
     list-style: disc;
@@ -160,5 +209,19 @@
 
   .content ul li p {
     margin: 0;
+  }
+}
+
+@keyframes tocLink {
+  0% {
+    left: 5px;
+  }
+
+  50% {
+    left: 8px;
+  }
+
+  100% {
+    left: 5px;
   }
 }
