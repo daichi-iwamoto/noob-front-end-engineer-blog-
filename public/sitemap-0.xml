@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+<url><loc>https://www.noob-front-end-engineer-blog.com/contact</loc><lastmod>2023-12-28T11:15:04.503Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.noob-front-end-engineer-blog.com/posts/migrating-gatsby-to-nextjs</loc><lastmod>2023-12-28T11:15:04.504Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.noob-front-end-engineer-blog.com/posts/next-and-tina-cms-demo</loc><lastmod>2023-12-28T11:15:04.504Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.noob-front-end-engineer-blog.com/tips</loc><lastmod>2023-12-28T11:15:04.504Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.noob-front-end-engineer-blog.com/tips/rehype-toc-and-slug</loc><lastmod>2023-12-28T11:15:04.504Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.noob-front-end-engineer-blog.com/tips/remark-breaks</loc><lastmod>2023-12-28T11:15:04.504Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://www.noob-front-end-engineer-blog.com/posts</loc><lastmod>2023-12-28T11:15:04.504Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+</urlset>

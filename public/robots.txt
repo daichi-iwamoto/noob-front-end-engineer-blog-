@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.noob-front-end-engineer-blog.com/
+
+# Sitemaps
+Sitemap: https://www.noob-front-end-engineer-blog.com/sitemap.xml
